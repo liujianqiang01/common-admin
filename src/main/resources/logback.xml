@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="org.springframework.web" level="INFO"/>
+
+    <property name="BASE_LOG_PATTERN" value="%m%n" />
+    <property name="ADMIN_LOG_PATTERN" value="%highlight(%d{yyyy-MM-dd HH:mm:ss} [%X{traceId}] %-5level %X{action}.%X{method} Line:%X{line} - %msg) %n" />
+    <property name="BASE_LOG_PATH" value="/Users/liujianqiang/Desktop/haima/data/log/" />
+
+    <appender name="base_appender" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>noFormatLogger</key>
+            <defaultValue>adminLogger</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="${noFormatLogger}_logger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <append>true</append>
+                <file>${BASE_LOG_PATH}/${noFormatLogger}.log</file>
+                <encoder charset="UTF-8">
+                    <pattern>${BASE_LOG_PATTERN}</pattern>
+                </encoder>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${BASE_LOG_PATH}/${noFormatLogger}.log.%d{yyyy-MM-dd}</fileNamePattern>
+                </rollingPolicy>
+            </appender>
+        </sift>
+    </appender>
+    <appender name="admin_appender" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>formatLogger</key>
+            <defaultValue>adminLogger</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="${formatLogger}_logger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <append>true</append>
+                <file>${BASE_LOG_PATH}/${formatLogger}.log</file>
+                <encoder charset="UTF-8">
+                    <pattern>${ADMIN_LOG_PATTERN}</pattern>
+                </encoder>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${BASE_LOG_PATH}/${formatLogger}.log.%d{yyyy-MM-dd}</fileNamePattern>
+                </rollingPolicy>
+            </appender>
+        </sift>
+    </appender>
+    <!--只打印输出内容-->
+    <logger name="noFormatLogger" level="debug" additivity="false">
+        <appender-ref ref="base_appender"/>
+    </logger>
+    <!--自带日志格式，打印时间 追踪请求等信息-->
+    <logger name="formatLogger" level="debug" additivity="false">
+        <appender-ref ref="admin_appender"/>
+    </logger>
+
+</configuration>
