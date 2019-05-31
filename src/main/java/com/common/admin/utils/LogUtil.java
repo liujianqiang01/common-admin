@@ -3,6 +3,7 @@ package com.common.admin.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
 import java.util.UUID;
@@ -60,7 +61,7 @@ public class LogUtil {
      * @param loggerName
      */
     public static void setNoFormatLogName(String loggerName){
-        setLogName(NO_FORMAT_LOGGER,loggerName,null);
+        setLogName(NO_FORMAT_LOGGER,loggerName,"false");
     }
     /**
      * 创建带格式的日志
@@ -89,7 +90,7 @@ public class LogUtil {
         // 最原始被调用的堆栈对象
         StackTraceElement caller = findCaller();
         Logger log ;
-        if(MDC.get("format") == null) {
+        if("false".equals(MDC.get("format"))) {
             log = LoggerFactory.getLogger(NO_FORMAT_LOGGER);
         }else {
             log = LoggerFactory.getLogger(FORMAT_LOGGER);
@@ -131,6 +132,9 @@ public class LogUtil {
      * @param context
      */
     public static void createMDC( Map<String, String> context){
+        if(CollectionUtils.isEmpty(context)){
+            return;
+        }
         MDC.setContextMap(context);
     }
     public static void trace(String msg) {

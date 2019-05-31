@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>common-admin</name>
-    <description>通用事件上报服务</description>
+    <description>后台服务</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -53,7 +53,11 @@
             <artifactId>fastjson</artifactId>
             <version>1.1.23</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.9</version>
+        </dependency>
     </dependencies>
 
     <build>

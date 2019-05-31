@@ -45,11 +45,11 @@
         </sift>
     </appender>
     <!--只打印输出内容-->
-    <logger name="noFormatLogger" level="debug" additivity="false">
+    <logger name="noFormatLogger" level="info" additivity="false">
         <appender-ref ref="base_appender"/>
     </logger>
     <!--自带日志格式，打印时间 追踪请求等信息-->
-    <logger name="formatLogger" level="debug" additivity="false">
+    <logger name="formatLogger" level="info" additivity="false">
         <appender-ref ref="admin_appender"/>
     </logger>
 
