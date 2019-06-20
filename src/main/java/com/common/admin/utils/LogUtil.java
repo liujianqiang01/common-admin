@@ -57,25 +57,30 @@ public class LogUtil {
     }
 
     /**
-     * 创建不带格式的日志
-     * @param loggerName
-     */
-    public static void setNoFormatLogName(String loggerName){
-        setLogName(NO_FORMAT_LOGGER,loggerName,"false");
-    }
-    /**
      * 创建带格式的日志
      * @param loggerName
      */
-    public static void setFormatLogName(String loggerName){
+    public static void setLogName(String loggerName){
         setLogName(FORMAT_LOGGER,loggerName,"true");
+    }
+    /**
+     * 创建不带格式的日志（上报日志等）
+     * @param loggerName
+     */
+    public static void setLogName(String loggerName,Boolean format){
+        if(format == null || format == false){
+            setLogName(NO_FORMAT_LOGGER,loggerName,"false");
+        }else {
+            setLogName(FORMAT_LOGGER,loggerName,"true");
+        }
+
     }
     /**
      * 设置日志文件名称，自定义多日志输出文件，需要在线程最开始设置日志文件名称。
      * 多线程情况下子线程不会继承MDC内容，需要手动设置（先getMDC 再赋值给子线程createMDC。
      * isBaseLog有三种值，
      */
-    public static void setLogName(String logger, String loggerName,String format){
+    private static void setLogName(String logger, String loggerName,String format){
         //设置基础版本日志名称
         MDC.put(logger,loggerName);
         //状态标识成使用基础版
@@ -150,10 +155,13 @@ public class LogUtil {
         logger().debug(msg, e);
     }
     public static void info(String msg) {
-        info(msg, null);
+        logger().info(msg);
     }
     public static void info(String msg, Throwable e) {
         logger().info(msg, e);
+    }
+    public static void info(String format, Object... argArray) {
+        logger().info(format,argArray);
     }
     public static void warn(String msg) {
         warn(msg, null);

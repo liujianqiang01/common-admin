@@ -8,7 +8,7 @@
     <property name="ADMIN_LOG_PATTERN" value="%highlight(%d{yyyy-MM-dd HH:mm:ss} [%X{traceId}] %-5level %X{action}.%X{method} Line:%X{line} - %msg) %n" />
     <property name="BASE_LOG_PATH" value="/Users/liujianqiang/Desktop/haima/data/log/" />
 
-    <appender name="base_appender" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <appender name="no_format_appender" class="ch.qos.logback.classic.sift.SiftingAppender">
         <discriminator>
             <key>noFormatLogger</key>
             <defaultValue>adminLogger</defaultValue>
@@ -26,7 +26,7 @@
             </appender>
         </sift>
     </appender>
-    <appender name="admin_appender" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <appender name="format_appender" class="ch.qos.logback.classic.sift.SiftingAppender">
         <discriminator>
             <key>formatLogger</key>
             <defaultValue>adminLogger</defaultValue>
@@ -44,13 +44,14 @@
             </appender>
         </sift>
     </appender>
+
     <!--只打印输出内容-->
     <logger name="noFormatLogger" level="info" additivity="false">
-        <appender-ref ref="base_appender"/>
+        <appender-ref ref="no_format_appender"/>
     </logger>
     <!--自带日志格式，打印时间 追踪请求等信息-->
     <logger name="formatLogger" level="info" additivity="false">
-        <appender-ref ref="admin_appender"/>
+        <appender-ref ref="format_appender"/>
     </logger>
 
 </configuration>

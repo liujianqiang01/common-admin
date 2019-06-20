@@ -1,14 +1,13 @@
 package com.common.admin.controller;
 
-import com.common.admin.common.AdminResponse;
+import com.common.admin.common.BaseResponse;
+import com.common.admin.common.ThreadPoolManager;
 import com.common.admin.utils.ExcelUtil;
 import com.common.admin.utils.LogUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -21,50 +20,35 @@ public class LogTestController {
 
     @RequestMapping("/test")
     @ResponseBody
-    public AdminResponse test() {
-        LogUtil.setFormatLogName("test");
-        LogUtil.info("========>带日期格式");
-        int a = 1/0;
-        LogUtil.setNoFormatLogName("test1");
+    public BaseResponse test() {
+        LogUtil.info("a = {},b={}","a","b");
         LogUtil.info("========>不带日期格式");
-        return AdminResponse.success();
+        return BaseResponse.success();
     }
     @RequestMapping("/test2")
     @ResponseBody
-    public AdminResponse test22(Integer id) {
+    public BaseResponse test22(Integer id) {
         Long start = System.currentTimeMillis();
-        for(int i = 0; i<50000;i++) {
-            LogUtil.info("========>id = " + id);
-            LogUtil.warn("========>warn");
-            LogUtil.error("========>error");
-
-            testRun(LogUtil.getMDC());
+        for(int i = 0; i<200000;i++) {
+            LogUtil.error("========>日志1");
+            LogUtil.info("========>日志{2}");
+            testRun();
         }
         Long time = System.currentTimeMillis()-start;
         LogUtil.error("========>time="+time);
-        return AdminResponse.success("hahahhahhahah");
+        return BaseResponse.success("hahahhahhahah");
     }
 
     /**
      * 多线程
-     * @param context
+     * @param
      */
-    private void testRun(Map<String, String> context){
-      new Thread(()->  {
-          LogUtil.info("========>线程1");
-      }).start();
-
-      new Thread(()->  {
-          LogUtil.createMDC(context);
-      LogUtil.info("========>线程2");}).start();
-        new Thread(()->  {
-            LogUtil.setFormatLogName("test");
-            LogUtil.info("========>线程3-打印到test");
-            LogUtil.error("========================================================");}).start();
-        new Thread(()->  {
-            LogUtil.setNoFormatLogName("test1");
-            LogUtil.info("========>线程4-打印到test1");
-            LogUtil.error("========================================================");}).start();
+    private void testRun(){
+        ThreadPoolManager.getsInstance().execute(() ->{
+            LogUtil.setLogName("test");
+            LogUtil.error("========>线程1");
+            LogUtil.info("========>线程1{2}");
+        });
     }
 
     @RequestMapping("/export")

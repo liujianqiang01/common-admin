@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Aspect
 @Component
-public class ParamLogAspect {
-    @Pointcut("execution(public * com.haimawan.real.phone.admin.controller..*.*(..))")
+public class RequestAspect {
+    @Pointcut("execution(public * com.common.admin.controller..*.*(..))")
     public void webLog(){
     }
     @Before("webLog()")

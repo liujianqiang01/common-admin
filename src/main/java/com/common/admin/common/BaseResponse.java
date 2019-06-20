@@ -12,7 +12,7 @@ import java.lang.reflect.InvocationTargetException;
  * @Date: 2019-01-01
  * @Description:
  */
-public class AdminResponse<T> implements Serializable {
+public class BaseResponse<T> implements Serializable {
 
     /**
      * 返回状态码
@@ -29,19 +29,19 @@ public class AdminResponse<T> implements Serializable {
      */
     String msg;
 
-    private AdminResponse(int code, T result, String msg) {
+    private BaseResponse(int code, T result, String msg) {
         this.code = code;
         this.result = result;
         this.msg = msg;
     }
-    private static <T> AdminResponse newInstance(int code, T result, String msg) {
-        AdminResponse apiResponse = new AdminResponse<>(code, result, msg);
+    private static <T> BaseResponse newInstance(int code, T result, String msg) {
+        BaseResponse apiResponse = new BaseResponse<>(code, result, msg);
         //返回数据打印在adminLog中
-        LogUtil.setFormatLogName("adminLogger");
+        LogUtil.setLogName("adminLogger");
         LogUtil.info("返回数据:"+ JSON.toJSONString(apiResponse));
         return apiResponse;
     }
-    private static <E extends Enum<E>, T> AdminResponse<T> fail(T result, E error) {
+    private static <E extends Enum<E>, T> BaseResponse<T> fail(T result, E error) {
 
         int code = MsgEnum.FAILURE.getCode();
         String msg =MsgEnum.FAILURE.getMsg();
@@ -70,15 +70,15 @@ public class AdminResponse<T> implements Serializable {
 
     }
 
-    public static final AdminResponse success() {
+    public static final BaseResponse success() {
         return success(null);
     }
 
-    public static final <T> AdminResponse<T> success(T result) {
+    public static final <T> BaseResponse<T> success(T result) {
         return newInstance(MsgEnum.SUCCESS.getCode(), result, MsgEnum.SUCCESS.getMsg());
     }
 
-    public static final <E extends Enum<E>, T> AdminResponse<T> fail(E error) {
+    public static final <E extends Enum<E>, T> BaseResponse<T> fail(E error) {
         return fail(null, error);
     }
 
